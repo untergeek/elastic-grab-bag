@@ -9,18 +9,18 @@ fi
 
 
 # Primary sizes only
-PGB=$(cat $1 | awk '{print $10}' | grep gb | tr -d 'gb' | paste -sd+ - | bc)
-PMB=$(cat $1 | awk '{print $10}' | grep mb | tr -d 'mb' | paste -sd+ - | bc)
-PKB=$(cat $1 | awk '{print $10}' | grep kb | tr -d 'kb' | paste -sd+ - | bc)
+PGB=$(cat $1 | awk '{print $10}' | grep gb | tr -d 'gb' | tr -d '\r' | paste -sd+ - | bc)
+PMB=$(cat $1 | awk '{print $10}' | grep mb | tr -d 'mb' | tr -d '\r' | paste -sd+ - | bc)
+PKB=$(cat $1 | awk '{print $10}' | grep kb | tr -d 'kb' | tr -d '\r' | paste -sd+ - | bc)
 
 if [ "x$PGB" == "x" ]; then PGB=1; fi
 if [ "x$PMB" == "x" ]; then PMB=1; fi
 if [ "x$PKB" == "x" ]; then PKB=1; fi
 
 # All storage (include primary and all replicas)
-ALLGB=$(cat $1 | awk '{print $9}' | grep gb | tr -d 'gb' | paste -sd+ - | bc)
-ALLMB=$(cat $1 | awk '{print $9}' | grep mb | tr -d 'mb' | paste -sd+ - | bc)
-ALLKB=$(cat $1 | awk '{print $9}' | grep kb | tr -d 'kb' | paste -sd+ - | bc)
+ALLGB=$(cat $1 | awk '{print $9}' | grep gb | tr -d 'gb' | tr -d '\r' | paste -sd+ - | bc)
+ALLMB=$(cat $1 | awk '{print $9}' | grep mb | tr -d 'mb' | tr -d '\r' | paste -sd+ - | bc)
+ALLKB=$(cat $1 | awk '{print $9}' | grep kb | tr -d 'kb' | tr -d '\r' | paste -sd+ - | bc)
 
 if [ "x$ALLGB" == "x" ]; then ALLGB=1; fi
 if [ "x$ALLMB" == "x" ]; then ALLMB=1; fi
