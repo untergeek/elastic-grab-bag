@@ -1,0 +1,59 @@
+[
+  {
+    "_index": "index",
+    "_id": "id",
+    "_source": {
+      "foo": "bar",
+      "ABCDE": "1",
+      "BCDEF": "2",
+      "cdefg": "3",
+      "DeFgH": "4"
+    }
+  },
+  {
+    "_index": "index",
+    "_id": "id2",
+    "_source": {
+      "root1": "1",
+      "rOOt2": "2",
+      "rooT3": {
+        "sub1": "sub1",
+        "SUB2": "sub2",
+        "suB3": "sub3",
+        "SUB4": {
+          "SuB5": "sub5",
+          "SUB6": {
+            "SUB7": {
+              "SUB8": {
+                "SUB9": "sub9"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "_index": "index",
+    "_id": "id3",
+    "_source": {
+      "root1": "1",
+      "rO Ot2": "2",
+      "ro oT3": {
+        "sub 1": "sub1",
+        "SUB 2": "sub2",
+        "su B3": "sub3",
+        "SUB 4": {
+          "Su B5": "sub5",
+          "SU B6": {
+            "SU B7": {
+              "SU B8": {
+                "SU B9": "sub9"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+]

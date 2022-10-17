@@ -1,0 +1,31 @@
+void iterateAllFields(def x) {
+  if (x instanceof List) {
+    for (def v: x) {
+      iterateAllFields(v);
+    }
+  }
+  if (!(x instanceof Map)) {
+    return;
+  }
+  List keys_to_remove = new ArrayList();
+  Map add_these = new HashMap();
+  for (entry in x.entrySet()) {
+    String raw = entry.getKey();
+    String norm = raw.toLowerCase().replace(" ","_");
+    if (raw != norm) {
+      add_these[norm] = entry.getValue();
+      keys_to_remove.add(raw);
+    }
+  }
+  for (item in keys_to_remove) {
+    x.remove(item)
+  }
+  for (entry in add_these.entrySet()) {
+    x[entry.getKey()] = entry.getValue()
+  }        
+  for (def v: x.values()) {
+    iterateAllFields(v);
+  }
+}
+
+iterateAllFields(ctx);
