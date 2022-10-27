@@ -28,7 +28,46 @@ pip install -U -r requirements.txt
 
 ## Running the script
 
+### For those using: `ingest_cat8.py`
+
+Help output:
+
+```
+$ ./ingest_cat8.py --help
+Usage: ingest_cat8.py [OPTIONS]
+
+  Insert documents from filename into index at es_url using provided
+  credentials
+
+Options:
+  --index TEXT
+  --es_url TEXT
+  --username TEXT
+  --password TEXT
+  --exclude_partial  Exclude indices starting with 'partial-'
+  --help             Show this message and exit.
+```
+
 ### For those using: `ingest_cat_file.py`
+
+Help output:
+
+```
+$ ./ingest_cat_file.py --help
+Usage: ingest_cat_file.py [OPTIONS] FILENAME
+
+  Insert documents from filename into index at es_url using provided
+  credentials
+
+Options:
+  --index TEXT
+  --es_url TEXT
+  --username TEXT
+  --password TEXT
+  --exclude_partial  Exclude indices starting with 'partial-'
+  --help             Show this message and exit.
+```
+
 #### Get the source JSON
 
 Have your customer run this and save the output as a JSON file.
@@ -90,6 +129,8 @@ This script will normalize field names to use underscores instead of spaces so t
 The script will prompt you for the Elasticsearch URL, username, password, and index.
 
 The script will create the index if it does not exist and currently has no logic to fail if the index already exists (feature requests accepted).
+
+**IMPORTANT:** With the frozen tier using fully cached indices using Searchable Snapshots, you will have indices whose names start with `partial-`. These indices should not be counted towards the hot/warm/cold tier sizing, so they need to be excluded. Use the `--exclude_partial` flag on the command-line to do this.
 
 The script also uses the `streaming_bulk` helper in the Elasticsearch Python client, so you won't see the progress bar move except in large chunks, or if the count of indices is small enough, only one chunk.
 

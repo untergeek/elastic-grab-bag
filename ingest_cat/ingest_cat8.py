@@ -40,20 +40,26 @@ def bulkload(index, doclist):
 @click.option("--es_url", prompt=True, type=str, default="http://127.0.0.1:9200")
 @click.option("--username", prompt=True, hide_input=False, default="elastic")
 @click.option("--password", prompt=True, hide_input=True, confirmation_prompt=True)
-def ingest_cat_doc(index, es_url, username, password):
+@click.option("--exclude_partial", is_flag=True, help="Exclude indices starting with 'partial-'")
+def ingest_cat_doc(index, es_url, username, password, exclude_partial):
     """Insert documents from filename into index at es_url using provided credentials"""
 
     try:
         client = Elasticsearch(hosts=es_url, basic_auth=(username, password))
     except Exception as exc:
         click.echo("Failed to connect to Elasticsearch: {0}".format(exc))
-    
-    documents = client.cat.indices(bytes='b', format='json', h='health,index,uuid,pri,rep,docs.count,store.size,pri.store.size,creation.date.string')
-    for doc in documents:
+
+    all_documents = client.cat.indices(bytes='b', format='json', h='health,index,uuid,pri,rep,docs.count,store.size,pri.store.size,creation.date.string')
+    documents = []
+    for doc in all_documents:
+        if exclude_partial:
+            if doc["index"].startswith('partial-'):
+                continue
         doc["docs_count"] = doc.pop("docs.count")
         doc["store_size"] = doc.pop("store.size")
         doc["pri_store_size"] = doc.pop("pri.store.size")
         doc["@timestamp"] = doc.pop("creation.date.string")
+        documents.append(doc)
 
     click.echo("Creating index '{0}'".format(index))
     create_index(client, index)
