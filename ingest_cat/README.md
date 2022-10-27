@@ -36,8 +36,8 @@ Help output:
 $ ./ingest_cat8.py --help
 Usage: ingest_cat8.py [OPTIONS]
 
-  Insert documents from filename into index at es_url using provided
-  credentials
+  Read from the _cat API at es_url using provided credentials and insert into
+  the named index
 
 Options:
   --index TEXT
@@ -56,8 +56,8 @@ Help output:
 $ ./ingest_cat_file.py --help
 Usage: ingest_cat_file.py [OPTIONS] FILENAME
 
-  Insert documents from filename into index at es_url using provided
-  credentials
+  Read _cat API JSON output stored in filename, ship to es_url using provided
+  credentials and insert into the named index
 
 Options:
   --index TEXT

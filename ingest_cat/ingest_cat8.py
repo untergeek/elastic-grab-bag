@@ -42,7 +42,7 @@ def bulkload(index, doclist):
 @click.option("--password", prompt=True, hide_input=True, confirmation_prompt=True)
 @click.option("--exclude_partial", is_flag=True, help="Exclude indices starting with 'partial-'")
 def ingest_cat_doc(index, es_url, username, password, exclude_partial):
-    """Insert documents from filename into index at es_url using provided credentials"""
+    """Read from the _cat API at es_url using provided credentials and insert into the named index"""
 
     try:
         client = Elasticsearch(hosts=es_url, basic_auth=(username, password))
