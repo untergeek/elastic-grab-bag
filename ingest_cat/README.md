@@ -89,4 +89,24 @@ mappings={
         }
 ```
 
+The end result, using the sample above, is individual documents like this:
+
+```
+      {
+        "_index": "myindex",
+        "_id": "K5neGoQBvWv8ZHm1RtYG",
+        "_score": 1,
+        "_source": {
+          "health": "green",
+          "index": ".ds-metrics-system.diskio-default-2022.10.20-000050",
+          "uuid": "9cw8JpuARN-0IMVE8axOjw",
+          "pri": "1",
+          "rep": "1",
+          "docs_count": "14371007",
+          "store_size": "7140672720",
+          "pri_store_size": "3571826412",
+          "@timestamp": "2022-10-20T13:19:14.865Z"
+        }
+      },
+```
 
