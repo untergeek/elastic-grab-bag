@@ -21,9 +21,15 @@ If you are a python dev, make sure the modules in `requirements.txt` will not co
 pip install -U -r requirements.txt
 ```
 
+## Script versions
+
+* `ingest_cat_file.py` for running against customer provided output from the `_cat` API
+* `ingest_cat8.py` for running in an Elasticsearch 8 cluster and ingesting the `_cat` API output directly into the same cluster in an index with the provided name
+
 ## Running the script
 
-### Get the source JSON
+### For those using: `ingest_cat_file.py`
+#### Get the source JSON
 
 Have your customer run this and save the output as a JSON file.
 
@@ -47,10 +53,24 @@ This will output a JSON array of documents, each one being a single index, e.g.:
   },
 ```
 
-### Script execution sample
+### Script execution sample (`ingest_cat_file.py`)
 
 ```
-$ ./ingest_cat.py /path/to/filename
+$ ./ingest_cat_file.py /path/to/filename
+Index [myindex]:
+Es host [http://127.0.0.1:9200]:
+Username [elastic]:
+Password:
+Repeat for confirmation:
+Creating index 'myindex'
+  0%|▍                                                                                      | 1/209 [00:00<00:30,  6.82docs/s]Indexed 209/209 documents
+100%|███████████████████████████████████████████████████████████████████████████████████| 209/209 [00:00<00:00, 1401.84docs/s]
+```
+
+### Script execution sample (`ingest_cat8.py`)
+
+```
+$ ./ingest_cat8.py
 Index [myindex]:
 Es host [http://127.0.0.1:9200]:
 Username [elastic]:
@@ -65,7 +85,9 @@ Creating index 'myindex'
 
 This script will normalize field names to use underscores instead of spaces so that `docs.count` becomes `docs_count`, and `creation.date.string` is renamed entirely to `@timestamp`.
 
-The script _requires_ a filename to even execute, and will prompt you for the Elasticsearch URL, username, password, and index.
+**NOTE:** If running `ingest_cat_file.py`, the script _requires_ a filename to even execute.
+
+The script will prompt you for the Elasticsearch URL, username, password, and index.
 
 The script will create the index if it does not exist and currently has no logic to fail if the index already exists (feature requests accepted).
 
@@ -94,7 +116,7 @@ The end result, using the sample above, is individual documents like this:
 ```
       {
         "_index": "myindex",
-        "_id": "K5neGoQBvWv8ZHm1RtYG",
+        "_id": "9cw8JpuARN-0IMVE8axOjw",
         "_score": 1,
         "_source": {
           "health": "green",

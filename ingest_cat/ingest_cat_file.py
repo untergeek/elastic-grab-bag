@@ -5,11 +5,11 @@ import click
 from elasticsearch8 import Elasticsearch
 from elasticsearch8.helpers import streaming_bulk
 
-def create_index(client, index):
+def create_index(client, index, shards=1):
     """Creates an index in Elasticsearch if one isn't already there."""
     client.options(ignore_status=400).indices.create(
         index=index,
-        settings={"number_of_shards": 1},
+        settings={"number_of_shards": shards},
         mappings={
             "properties": {
                 "health": {"type": "keyword"},
@@ -22,13 +22,17 @@ def create_index(client, index):
                 "pri_store_size": {"type": "long"},
                 "@timestamp": {"type": "date"},
             }
-        }
+        },
+        wait_for_active_shards=shards,
+        timeout=30
     )
 
 def bulkload(index, doclist):
     for doc in doclist:
         yield {
+            "_op_type": "index",
             "_index": index,
+            "_id": doc["uuid"],
             "_source": doc,
         }
 
@@ -40,6 +44,12 @@ def bulkload(index, doclist):
 @click.argument("filename", nargs=1, type=click.Path(exists=True))
 def ingest_cat_doc(index, es_url, username, password, filename):
     """Insert documents from filename into index at es_url using provided credentials"""
+
+    try:
+        client = Elasticsearch(hosts=es_url, basic_auth=(username, password))
+    except Exception as exc:
+        click.echo("Failed to connect to Elasticsearch: {0}".format(exc))
+    
     documents = json.load(open(filename,))
     for doc in documents:
         doc["docs_count"] = doc.pop("docs.count")
@@ -47,11 +57,6 @@ def ingest_cat_doc(index, es_url, username, password, filename):
         doc["pri_store_size"] = doc.pop("pri.store.size")
         doc["@timestamp"] = doc.pop("creation.date.string")
 
-    try:
-        client = Elasticsearch(hosts=es_url, basic_auth=(username, password))
-    except Exception as exc:
-        click.echo("Failed to connect to Elasticsearch: {0}".format(exc))
-    
     click.echo("Creating index '{0}'".format(index))
     create_index(client, index)
 
