@@ -6,7 +6,7 @@ from elasticsearch8.helpers import streaming_bulk
 
 def create_index(client, index, shards=1):
     """Creates an index in Elasticsearch if one isn't already there."""
-    client.options(ignore_status=400).indices.create(
+    client.options(ignore_status=400, request_timeout=30).indices.create(
         index=index,
         settings={"number_of_shards": shards},
         mappings={
@@ -23,7 +23,6 @@ def create_index(client, index, shards=1):
             }
         },
         wait_for_active_shards=shards,
-        timeout=30
     )
 
 def bulkload(index, doclist):
