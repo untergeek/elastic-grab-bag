@@ -1,4 +1,4 @@
-#Log redate script
+# Log redate script
 
 This script has been used in the past for workshops and demos to create 300K lines of Apache-style web logs for testing and demoing. 
 Running it _requires_ a local Logstash instance. It will set the dates for these logs from their original time in 2014 to end at the
