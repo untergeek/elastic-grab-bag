@@ -6,7 +6,7 @@ prompted date, effectively giving a month of logs at 1K lines per day.
 
 **Both files must be placed in the root directory of a working Logstash instance.** 
 
-Most recently tested with 8.4.3.
+Most recently tested with Logstash version: 8.4.3
 
 ## Run example
 
