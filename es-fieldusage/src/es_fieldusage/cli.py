@@ -3,7 +3,7 @@ import click
 from es_client.helpers import utils as escl
 from es_fieldusage.defaults import EPILOG, get_context_settings
 from es_fieldusage.helpers.utils import cli_opts
-from es_fieldusage.commands import file, stdout
+from es_fieldusage.commands import file, show_indices, stdout
 from es_fieldusage.version import __version__
 
 ONOFF = {'on': '', 'off': 'no-'}
@@ -104,5 +104,6 @@ def show_all_options(
     ctx.exit()
 
 # Add the subcommands
-run.add_command(stdout)
+run.add_command(show_indices)
 run.add_command(file)
+run.add_command(stdout)

@@ -5,7 +5,7 @@ import click
 from es_client.helpers import utils as escl
 from es_fieldusage.defaults import FILEPATH_OVERRIDE, EPILOG, get_context_settings
 from es_fieldusage.exceptions import FatalException
-from es_fieldusage.helpers.client import get_args
+from es_fieldusage.helpers.client import get_args, get_client
 from es_fieldusage.helpers.utils import cli_opts, is_docker, output_report
 from es_fieldusage.main import FieldUsage
 
@@ -166,3 +166,46 @@ def file(
         click.secho(' ... (too many to show)')
     else:
         click.secho(files_written, bold=True)
+
+@click.command(context_settings=get_context_settings(), epilog=EPILOG)
+@click.argument('search_pattern', type=str, nargs=1)
+@click.pass_context
+def show_indices(ctx, search_pattern):
+    """
+    Show indices on the console matching SEARCH_PATTERN
+
+    $ es-fieldusage show_indices SEARCH_PATTERN
+
+    This is included as a way to ensure you are seeing the indices you expect before using the file
+    or stdout commands.
+    """
+    client_args, other_args = get_args(ctx.parent.params)
+    try:
+        client = get_client(configdict={
+            'elasticsearch': {
+                'client': escl.prune_nones(client_args.asdict()),
+                'other_settings': escl.prune_nones(other_args.asdict())
+            }
+        })
+    except Exception as exc:
+        LOGGER.critical('Exception encountered: %s', exc)
+        raise FatalException from exc
+    cat = client.cat.indices(index=search_pattern, h='index', format='json')
+    indices = []
+    for item in cat:
+        indices.append(item['index'])
+    indices.sort()
+    # Output
+    ## Search Pattern
+    click.secho('\nSearch Pattern', nl=False, overline=True, underline=True, bold=True)
+    click.secho(f': {search_pattern}', bold=True)
+    ## Indices Found
+    if len(indices) == 1:
+        click.secho('\nIndex Found', nl=False, overline=True, underline=True, bold=True)
+        click.secho(f': {indices[0]}', bold=True)
+    else:
+        click.secho(f'\n{len(indices)} ', overline=True, underline=True, bold=True, nl=False)
+        click.secho('Indices Found', overline=True, underline=True, bold=True, nl=False)
+        click.secho(': ')
+        for idx in indices:
+            click.secho(idx)

@@ -119,6 +119,24 @@ Options:
   Learn more at https://github.com/untergeek/elastic-grab-bag/es_fieldusage
 ```
 
+### Command `show-indices` help output
+
+```
+$ es-fieldusage show-indices --help
+Usage: es-fieldusage show-indices SEARCH_PATTERN
+
+  Show indices on the console matching SEARCH_PATTERN
+
+  $ es-fieldusage show_indices SEARCH_PATTERN
+
+  This is included as a way to ensure you are seeing the indices you expect before using the file or stdout commands.
+
+Options:
+  -h, --help  Show this message and exit.
+
+  Learn more at https://github.com/untergeek/elastic-grab-bag/es-fieldusage
+```
+
 ## License
 
 `es-fieldusage` is distributed under the terms of the [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) license.
