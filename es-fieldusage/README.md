@@ -94,6 +94,8 @@ Options:
   ```
 
 ### Command `file` help output
+
+```
 $ es-fieldusage file --help
 Usage: es-fieldusage file [OPTIONS] SEARCH_PATTERN
 
@@ -115,6 +117,7 @@ Options:
   -h, --help                      Show this message and exit.
 
   Learn more at https://github.com/untergeek/elastic-grab-bag/es_fieldusage
+```
 
 ## License
 
