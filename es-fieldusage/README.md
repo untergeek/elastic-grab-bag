@@ -9,6 +9,11 @@
 
 - [Installation](#installation)
 - [Description](#description)
+  - [Options](#top-level-help-output)
+  - [Command: stdout](#command-stdout-help-output)
+  - [Command: file](#command-file-help-output)
+  - [Command: show-indices](#command-show-indices-help-output)
+- [Docker Usage](#docker-usage)
 - [License](#license)
 
 ## Installation
@@ -68,7 +73,7 @@ Commands:
   Learn more at https://github.com/untergeek/elastic-grab-bag/es_fieldusage
 ```
 
-### Command `stdout` help output
+### Command: `stdout` help output
 
 ```
 $ es-fieldusage stdout --help
@@ -118,6 +123,64 @@ Options:
 
   Learn more at https://github.com/untergeek/elastic-grab-bag/es_fieldusage
 ```
+
+### Command `show-indices` help output
+
+```
+$ es-fieldusage show-indices --help
+Usage: es-fieldusage show-indices SEARCH_PATTERN
+
+  Show indices on the console matching SEARCH_PATTERN
+
+  $ es-fieldusage show_indices SEARCH_PATTERN
+
+  This is included as a way to ensure you are seeing the indices you expect before using the file or stdout commands.
+
+Options:
+  -h, --help  Show this message and exit.
+
+  Learn more at https://github.com/untergeek/elastic-grab-bag/es-fieldusage
+```
+
+## Docker usage
+
+### Docker build
+
+From the path which contains `Dockerfile`:
+
+```
+$ ./docker build . -t reponame/es-fieldusage:x.y.z
+```
+
+e.g.
+
+```
+docker build . -t untergeek/es-fieldusage:1.0.0
+```
+
+You can also build for x86_64 and arm64 if you have the appropriate buildx image setup:
+
+```
+docker buildx build --platform linux/amd64,linux/arm64 -t untergeek/es-fieldusage:1.0.0 --push .
+```
+
+### Docker run
+
+**Example:**
+
+```
+docker run -t --rm --name es-fieldusage -v /path/to/configfile/:/.esfieldusage -v $(pwd)/:/fileoutput untergeek/es-fieldusage:1.0.0 --config /.esfieldusage/config.yml show-indices 'index-*'
+```
+
+**Explanation:**
+
+  * The `-t` flag indicates that you are interacting with a terminal application
+  * `--rm` deletes the created Docker image after the run. Omitting this will result in a lot of created images that run once. Using `--name` will prevent this collision if `--rm` is omitted by reminding you that there is already an image with the same name.
+  * `--name` is the name of the image to create. This is optional.
+  * `-v` sets up volumes. `/path/to/configfile/` is the local file path to where you have a YAML configuration file, if you choose to use one. The `:/.esfieldusage` portion of the volume map is the directory where that configuration file is expected in the Docker image. The second volume mapping is `$(pwd):/fileoutput`. `/fileoutput` is the dedicated file path on the Docker image where output from the [file](#command-file-help-output) command will be written. By using `$(pwd)` it will map your present working directory so the files will appear there. Otherwise you can map another path here.
+  * `untergeek/es-fieldusage:1.0.0` is the `repository/image:version` to run.
+  * `--config /.esfieldusage/config.yml`, as stated previously, if you intend to use a YAML configuration file, the path needs to be mapped as a volume, and then accessed this way. The filename should match whatever you actually have, and not necessarily `config.yml`
+  * `show-indices 'index-*'` Everything after here is available as regular options and commands for es-fieldusage.
 
 ## License
 

@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 # pylint: disable=broad-except, no-value-for-parameter
 """
-Wrapper for running the command-line script from an installed module. 
+Wrapper for running es_fieldusage.cli but importing the module from the local file path
+i.e., this must be executed from src.
 
-Because this script is up one level from src, it has to find the module es_fieldusage.cli from
-installed modules. This makes it a good way to ensure everything will work when installed.
-
-To test development in progress, use the local_test.py script in src (and you must be in src to execute)
+The run_script.py script up one level from src imports from the installed module store.
 """
 import sys
 import click
